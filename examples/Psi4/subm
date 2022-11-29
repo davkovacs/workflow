@@ -1,0 +1,29 @@
+#!/bin/bash --login
+
+#SBATCH --job-name=psi4_test
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=128
+#SBATCH --cpus-per-task=1
+#SBATCH --time=1:00:0
+
+#SBATCH --account=e89-came 
+#SBATCH --partition=standard
+#SBATCH --qos=standard
+
+source /work/e89/e89/dpk25/.bashrc
+
+
+# Python
+conda activate psi4_dft
+
+# create a scratch directory
+mkdir tmp
+export PSI_SCRATCH=./tmp/
+# thread parallelism for PSI4
+export OMP_NUM_THREADS=16
+export MKL_NUM_THREADS=16
+
+python eval_wfl.py
+# clean the scratch directory
+rm tmp/*
+
